@@ -16,11 +16,11 @@ const HomePage = () => {
   return (
     <Container maxW="container.xl" py={12}>
       <Toaster />
-      <VStack spacing={8}>
+      <VStack spacing={8} mt={30} ml = {250}>
         <Text
           fontSize={"30"}
           fontWeight={"bold"}
-          bg={"cyan.100"}
+          bg={"black"}
           bgClip={"text"}
           textAlign={"center"}
         >

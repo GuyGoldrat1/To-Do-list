@@ -5,9 +5,10 @@ import {
   Container,
   Heading,
   Input,
-  Select,
+  Textarea,
   VStack,
   createListCollection,
+  Text,
 } from "@chakra-ui/react";
 import {
   SelectContent,
@@ -17,7 +18,7 @@ import {
   SelectTrigger,
   SelectValueText,
 } from "../components/ui/select";
-
+import { Field } from "../components/ui/field";
 
 import { Toaster, toaster } from "../components/ui/toaster";
 import { useTaskStore } from "../store/tasks";
@@ -58,53 +59,59 @@ const CreatePage = () => {
     ],
   });
 
-
   return (
-    <Container maxW={"container.sm"}>
+    <Container maxW={"container.sm"} >
       <Toaster />
 
-      <VStack spacing={8}>
-        <Heading as={"h1"} size={"2xl"} textAlign={"center"} mb={8}>
+      <VStack spacing={8} >
+        <Heading as={"h1"} size={"2xl"} textAlign={"center"} mb={8} mt={20}>
           Create New Product
         </Heading>
 
-        <Box w={""} bg={"gray.800"} p={6} rounded={"lg"} shadow={"md"}>
+        <Box w={""} bg={"white"} p={6} rounded={"lg"} shadow={"md"}>
           <VStack spacing={4}>
-            <Input
-              placeholder="Task Title"
-              name="title"
-              value={newTask.title}
-              onChange={(e) =>
-                setNewTask({ ...newTask, title: e.target.value })
-              }
-            />
-            <Input
-              placeholder="Task Description"
-              name="description"
-              value={newTask.description}
-              onChange={(e) =>
-                setNewTask({ ...newTask, description: e.target.value })
-              }
-            />
-            <Input
-              placeholder="Due Date"
-              name="due_date"
-              type="date"
-              value={newTask.due_date}
-              onChange={(e) =>
-                setNewTask({ ...newTask, due_date: e.target.value })
-              }
-            />
-            <Input
-              placeholder="Assigned User ID"
-              name="assigned_user_id"
-              type="number"
-              value={newTask.assigned_user_id}
-              onChange={(e) =>
-                setNewTask({ ...newTask, assigned_user_id: e.target.value })
-              }
-            />
-            <SelectRoot collection={prioritys} size="sm" width="320px">
+            <Field label="Title" required>
+              <Input
+                name="title"
+                value={newTask.title}
+                onChange={(e) =>
+                  setNewTask({ ...newTask, title: e.target.value })
+                }
+              />
+            </Field>
+            <Field label="Description" required>
+              <Textarea
+                name="description"
+                value={newTask.description}
+                onChange={(e) =>
+                  setNewTask({ ...newTask, description: e.target.value })
+                }
+              />
+            </Field>
+            <Field label="due date" required>
+              <Input
+                name="due_date"
+                type="date"
+                value={newTask.due_date}
+                onChange={(e) =>
+                  setNewTask({ ...newTask, due_date: e.target.value })
+                }
+              />
+            </Field>
+            <Field label="Assigned User ID" required>
+              <Input
+                name="assigned_user_id"
+                type="number"
+                value={newTask.assigned_user_id}
+                onChange={(e) =>
+                  setNewTask({ ...newTask, assigned_user_id: e.target.value })
+                }
+              />
+            </Field>
+
+            <SelectRoot collection={prioritys} size="sm" width="320px" mb={3}>
+              <SelectLabel>Priority</SelectLabel>
+
               <SelectTrigger>
                 <SelectValueText placeholder="Select priority">
                   {
@@ -132,6 +139,5 @@ const CreatePage = () => {
     </Container>
   );
 };
-
 
 export default CreatePage;

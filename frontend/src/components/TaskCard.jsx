@@ -65,7 +65,7 @@ const TaskCard = ({ task }) => {
 
   return (
     <Box>
-      <Card.Root width="270px" bg="blue.800">
+      <Card.Root width="270px" bg="#ffffff">
         <Card.Body gap="2">
           <Card.Title>{task.title}</Card.Title>
           <Card.Description>{task.description}</Card.Description>
@@ -141,7 +141,8 @@ const TaskCard = ({ task }) => {
                       <SelectValueText placeholder="Select priority">
                         {
                           prioritys.items.find(
-                            (priority) => priority.value === String(updateTask.priority_id)
+                            (priority) =>
+                              priority.value === String(updateTask.priority_id)
                           )?.label
                         }
                       </SelectValueText>
