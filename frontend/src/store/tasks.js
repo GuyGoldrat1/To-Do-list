@@ -45,8 +45,9 @@ export const useTaskStore = create((set) => ({
     return { success: true, message: "Task created!" };
   },
 
-  fetchTasks: async () => {
-    const res = await fetch("/api/tasks");
+  fetchTasks: async (statusId) => {
+    const query = statusId ? `?status_id=${statusId}` : "";
+    const res = await fetch(`/api/tasks${query}`);
     const data = await res.json();
     if (!data.success) {
       return { success: false, message: data.message };

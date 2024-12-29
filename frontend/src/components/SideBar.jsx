@@ -1,14 +1,17 @@
-import { Button, Box, Flex, Text, VStack } from "@chakra-ui/react";
-import { Link } from "react-router-dom";
+import { Button, Box, Flex, Text, VStack, Separator } from "@chakra-ui/react";
+import { Link, useLocation } from "react-router-dom";
 
-  const pages = [
-    { name: "Tasks Board", path: "/" },
-    { name: "Create", path: "/create" },
-    { name: "Other Page", path: "/some-other-page" },
-  ];
-
+const pages = [
+  { name: "Completed", path: "/?status_id=4" },
+  { name: "Drafts", path: "/?status_id=1" },
+  { name: "onHold", path: "/?status_id=3" },
+  { name: "Deleted", path: "/?status_id=5" },
+  { name: "All Tasks", path: "/" },
+];
 
 const Sidebar = () => {
+    const location = useLocation();
+
   return (
     <Box
       w="250px"
@@ -30,13 +33,37 @@ const Sidebar = () => {
         w="full"
         mt={10}
       >
-        <Link to="/">Tasks Board</Link>
+        <Link to="/?status_id=2">Tasks Board</Link>
       </Text>
 
       <VStack spacing={6} align="flex-middle" mt={20}>
+        <Link to="/?status_id=2">
+          <Button
+            variant="ghost"
+            color="black"
+            w="full"
+            bg={location.search === "?status_id=2"
+              ? "#efedea" : "transparent"} // Highlight active
+            _hover={{ bg: "#efedea" }}
+          >
+            DashBoard
+          </Button>
+        </Link>
+        <Separator size="xs" mb={10} mt={10} />
+
         {pages.map((page) => (
           <Link to={page.path} key={page.name}>
-            <Button variant="ghost" color="black" w="full">
+            <Button
+              variant="ghost"
+              color="black"
+              w="full"
+              bg={
+                location.search === page.path.split("/")[1]
+                  ? "#efedea"
+                  : "transparent"
+              } // Highlight active
+              _hover={{ bg: "#efedea" }}
+            >
               {page.name}
             </Button>
           </Link>

@@ -3,10 +3,12 @@ import {
   Box,
   Text,
   Card,
-  useDisclosure,
   VStack,
   Input,
   createListCollection,
+  Textarea,
+  Badge,
+  Flex,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { useTaskStore } from "../store/tasks";
@@ -30,7 +32,9 @@ import {
   SelectTrigger,
   SelectValueText,
 } from "./ui/select";
-
+import { Field } from "../components/ui/field";
+import { useRef } from "react";
+import PrioritySelector from "./PrioritySelector";
 
 const TaskCard = ({ task }) => {
   const { deleteTask, updateTask } = useTaskStore();
@@ -53,44 +57,73 @@ const TaskCard = ({ task }) => {
       duration: 3000,
     });
   };
-    const prioritys = createListCollection({
-      items: [
-        { label: "Low", value: "1" },
-        { label: "Medium", value: "2" },
-        { label: "High", value: "3" },
-        { label: "Urgent", value: "4" },
-      ],
-    });
 
+  const prioritys = createListCollection({
+    items: [
+      { label: "Low", value: "1", color: "teal" },
+      { label: "Medium", value: "2", color: "green" },
+      { label: "High", value: "3", color: "yellow" },
+      { label: "Urgent", value: "4", color: "red" },
+    ],
+  });
+  const states = createListCollection({
+    items: [
+      { label: "Draft", value: "1", color: "gray" },
+      { label: "In Progress", value: "2", color: "yellow" },
+      { label: "On Hold", value: "3", color: "purple" },
+      { label: "Completed", value: "4", color: "green" },
+      { label: "Deleted", value: "5", color: "red" },
+    ],
+  });
+
+  const currentState = states.items.find(
+    (state) => state.value === String(task.status_id)
+  );
+  const currentPriority = prioritys.items.find(
+    (Priority) => Priority.value === String(task.priority_id)
+  );
+  const handlePriorityChange = (newPriorityId) => {
+    setUpdatedTask({
+      ...updatedTask,
+      priority_id: newPriorityId, // Directly update the priority_id
+    });
+  };
 
   return (
     <Box>
-      <Card.Root width="270px" bg="#ffffff">
+      <Card.Root
+        width="300px"
+        height="320px" // Fixed height for uniform card size
+        bg="#ffffff"
+        display="flex"
+        flexDirection="column"
+        justifyContent="space-between"
+      >
         <Card.Body gap="2">
+          <Badge variant="surface" colorPalette={currentState.color}>
+            {currentState.label}
+          </Badge>
           <Card.Title>{task.title}</Card.Title>
-          <Card.Description>{task.description}</Card.Description>
+          <Card.Description
+            height="60px" // Fixed height for descriptions
+            overflow="hidden"
+            textOverflow="ellipsis"
+            whiteSpace="normal"
+          >
+            {task.description || "No description available"}
+          </Card.Description>
           <Text>Due: {new Date(task.due_date).toLocaleDateString()}</Text>
-          <Text>
-            Priority:{" "}
-            {["Low", "Medium", "High", "Urgent"][task.priority_id - 1]}
-          </Text>
-          <Text>
-            Status:{" "}
-            {
-              ["Draft", "In Progress", "On Hold", "Completed", "Deleted"][
-                task.status_id - 1
-              ]
-            }
-          </Text>
         </Card.Body>
         <Card.Footer justifyContent="flex-end">
-          <Button colorScheme="red" onClick={() => handleDeleteTask(task._id)}>
-            Delete
-          </Button>
+          <Flex justifyContent="flex-start" width="100%">
+            <Badge colorPalette={currentPriority.color} size="lg">
+              {currentPriority.label}
+            </Badge>
+          </Flex>
 
           <DialogRoot placement="center" motionPreset="slide-in-bottom">
             <DialogTrigger>
-              <Button>Edit</Button>
+              <Button variant="surface">Edit</Button>
             </DialogTrigger>
             <DialogContent>
               <DialogHeader>
@@ -98,66 +131,86 @@ const TaskCard = ({ task }) => {
               </DialogHeader>
               <DialogBody>
                 <VStack spacing={4}>
-                  <Input
-                    placeholder="Title"
-                    value={updatedTask.title}
-                    onChange={(e) =>
-                      setUpdatedTask({ ...updatedTask, title: e.target.value })
-                    }
-                  />
-                  <Input
-                    placeholder="Description"
-                    value={updatedTask.description}
-                    onChange={(e) =>
-                      setUpdatedTask({
-                        ...updatedTask,
-                        description: e.target.value,
-                      })
-                    }
-                  />
-                  <Input
-                    type="date"
-                    value={updatedTask.due_date}
-                    onChange={(e) =>
-                      setUpdatedTask({
-                        ...updatedTask,
-                        due_date: e.target.value,
-                      })
-                    }
-                  />
+                  <Field label="Title" required>
+                    <Input
+                      name="title"
+                      value={updatedTask.title}
+                      onChange={(e) =>
+                        setUpdatedTask({
+                          ...updatedTask,
+                          title: e.target.value,
+                        })
+                      }
+                    />
+                  </Field>
+                  <Field label="Description" required>
+                    <Textarea
+                      placeholder="Description"
+                      value={updatedTask.description}
+                      onChange={(e) =>
+                        setUpdatedTask({
+                          ...updatedTask,
+                          description: e.target.value,
+                        })
+                      }
+                    />
+                  </Field>
+                  <Field label="due date" required>
+                    <Input
+                      type="date"
+                      value={updatedTask.due_date}
+                      onChange={(e) =>
+                        setUpdatedTask({
+                          ...updatedTask,
+                          due_date: e.target.value,
+                        })
+                      }
+                    />
+                  </Field>
+                  <Field label="Assigned User ID" required>
+                    <Input
+                      type="number"
+                      placeholder="Assigned User ID"
+                      value={updatedTask.assigned_user_id}
+                      onChange={(e) =>
+                        setUpdatedTask({
+                          ...updatedTask,
+                          assigned_user_id: e.target.value,
+                        })
+                      }
+                    />
+                  </Field>
+                  <Field label="Priority">
+                    <PrioritySelector
+                      items={prioritys.items}
+                      onChange={handlePriorityChange}
+                    />
+                  </Field>
                   <Input
                     type="number"
-                    placeholder="Assigned User ID"
-                    value={updatedTask.assigned_user_id}
+                    value={updatedTask.status_id}
                     onChange={(e) =>
                       setUpdatedTask({
                         ...updatedTask,
-                        assigned_user_id: e.target.value,
+                        status_id: e.target.value,
                       })
                     }
                   />
-                  <SelectRoot collection={prioritys} size="sm" width="320px">
-                    <SelectTrigger>
-                      <SelectValueText placeholder="Select priority">
-                        {
-                          prioritys.items.find(
-                            (priority) =>
-                              priority.value === String(updateTask.priority_id)
-                          )?.label
-                        }
-                      </SelectValueText>
-                    </SelectTrigger>
-                    <SelectContent>
-                      {prioritys.items.map((priority) => (
-                        <SelectItem item={priority} key={priority.value}>
-                          {priority.label}
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </SelectRoot>
                 </VStack>
               </DialogBody>
               <DialogFooter>
+                <Flex justifyContent="flex-start" width="100%">
+                  {task.status_id !== 5 && (
+                    <Button
+                      colorPalette="red"
+                      variant="outline"
+                      onClick={() => handleDeleteTask(task._id)}
+                      mr={40}
+                    >
+                      Delete
+                    </Button>
+                  )}
+                </Flex>
                 <DialogActionTrigger asChild>
                   <Button variant="outline">Cancel</Button>
                 </DialogActionTrigger>

@@ -19,8 +19,6 @@ import {
   SelectValueText,
 } from "../components/ui/select";
 import { Field } from "../components/ui/field";
-import { Slider } from "../components/ui/slider";
-
 
 import { Toaster, toaster } from "../components/ui/toaster";
 import { useTaskStore } from "../store/tasks";
@@ -61,13 +59,11 @@ const CreatePage = () => {
     ],
   });
 
-
-
   return (
-    <Container maxW={"container.sm"}>
+    <Container maxW={"container.sm"} >
       <Toaster />
 
-      <VStack spacing={8}>
+      <VStack spacing={8} >
         <Heading as={"h1"} size={"2xl"} textAlign={"center"} mb={8} mt={20}>
           Create New Product
         </Heading>
@@ -112,6 +108,7 @@ const CreatePage = () => {
                 }
               />
             </Field>
+
             <SelectRoot collection={prioritys} size="sm" width="320px" mb={3}>
               <SelectLabel>Priority</SelectLabel>
 

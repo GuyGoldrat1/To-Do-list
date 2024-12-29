@@ -4,7 +4,13 @@ import Task from "../models/task.model.js";
 // Fetch all tasks
 export const getTasks = async (req, res) => {
   try {
-    const tasks = await Task.find({});
+    const { status_id } = req.query;
+
+    // If no status_id is provided, get all tasks
+    const filter = status_id ? { status_id } : {};
+
+    // Fetch tasks based on the filter
+    const tasks = await Task.find(filter);
     res.status(200).json({ success: true, data: tasks });
   } catch (error) {
     console.error("Error in fetching tasks", error.message);
@@ -81,7 +87,11 @@ export const deleteTask = async (req, res) => {
   const { id } = req.params;
 
   try {
-    await Task.findByIdAndDelete(id);
+    const updatedTask = await Task.findByIdAndUpdate(
+      id,
+      { status_id: 5 },
+      { new: true }
+    );
     res.status(200).json({ success: true, message: "Task Deleted" });
   } catch (error) {
     console.error("Error in deleting task", error.message);
