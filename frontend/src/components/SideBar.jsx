@@ -37,12 +37,12 @@ const Sidebar = () => {
       </Text>
 
       <VStack spacing={6} align="flex-middle" mt={20}>
-        <Link to="/?status_id=2">
+        <Link to="/?status_id=0">
           <Button
             variant="ghost"
             color="black"
             w="full"
-            bg={location.search === "?status_id=2"
+            bg={location.search === "?status_id=0"
               ? "#efedea" : "transparent"} // Highlight active
             _hover={{ bg: "#efedea" }}
           >
