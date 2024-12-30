@@ -36,10 +36,6 @@ const CreatePage = () => {
   const { createTask } = useTaskStore();
 
   const handleAddTask = async () => {
-    if (!newTask.due_date) {
-      newTask.due_date = new Date(0); // Set a default value or use any placeholder
-    }
-
     const { success, message } = await createTask(newTask);
     if (!success) {
       toaster.create({
@@ -55,7 +51,6 @@ const CreatePage = () => {
       });
     }
   };
-
   const prioritys = createListCollection({
     items: [
       { label: "Low", value: "1", color: "teal" },
@@ -82,7 +77,7 @@ const CreatePage = () => {
 
         <Box w={""} bg={"white"} p={6} rounded={"lg"} shadow={"md"}>
           <VStack spacing={4}>
-            <Field label="Title" required>
+            <Field label="Title" >
               <Input
                 name="title"
                 value={newTask.title}
@@ -91,7 +86,7 @@ const CreatePage = () => {
                 }
               />
             </Field>
-            <Field label="Description" required>
+            <Field label="Description" >
               <Textarea
                 name="description"
                 value={newTask.description}
@@ -110,7 +105,7 @@ const CreatePage = () => {
                 }
               />
             </Field>
-            <Field label="Assigned User ID" required>
+            <Field label="Assigned User ID" >
               <Input
                 name="assigned_user_id"
                 type="number"
@@ -120,13 +115,10 @@ const CreatePage = () => {
                 }
               />
             </Field>
-            <Field label="Priority" mb={3}>
               <PrioritySelector
                 items={prioritys.items}
                 onChange={handlePriorityChange}
               />
-            </Field>
-
             <Button colorScheme="blue" onClick={handleAddTask} w="full">
               Add Task
             </Button>

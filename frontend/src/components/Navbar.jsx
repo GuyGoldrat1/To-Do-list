@@ -20,7 +20,7 @@ const Navbar = () => {
       >
         <HStack spacing={2} alignItems={"center"} ml="auto">
           <Link to={"/create"}>
-            <Button color={"#e89700"} variant="outline" size="xl">
+            <Button color={"#e89700"} variant="surface" size="xl">
               Create
             </Button>
           </Link>

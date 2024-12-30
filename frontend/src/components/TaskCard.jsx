@@ -9,6 +9,7 @@ import {
   Textarea,
   Badge,
   Flex,
+  Separator,
 } from "@chakra-ui/react";
 import { useState } from "react";
 import { useTaskStore } from "../store/tasks";
@@ -35,6 +36,7 @@ import {
 import { Field } from "../components/ui/field";
 import { useRef } from "react";
 import PrioritySelector from "./PrioritySelector";
+import moment from "moment";
 
 const TaskCard = ({ task }) => {
   const { deleteTask, updateTask } = useTaskStore();
@@ -88,7 +90,9 @@ const TaskCard = ({ task }) => {
       priority_id: newPriorityId, // Directly update the priority_id
     });
   };
-
+  const formatDateToText = (dateString) => {
+    return moment(dateString).format("DD MMM YY");
+  };
   return (
     <Box>
       <Card.Root
@@ -112,15 +116,25 @@ const TaskCard = ({ task }) => {
           >
             {task.description || "No description available"}
           </Card.Description>
-          <Text>Due: {new Date(task.due_date).toLocaleDateString()}</Text>
-        </Card.Body>
-        <Card.Footer justifyContent="flex-end">
-          <Flex justifyContent="flex-start" width="100%">
+
+          <Flex
+            mt={10}
+            justifyContent="space-between"
+            alignItems="center"
+            width="100%"
+          >
             <Badge colorPalette={currentPriority.color} size="lg">
               {currentPriority.label}
             </Badge>
+            <Text>
+              {task.due_date === new Date(0).toISOString()
+                ? "Invalid Date"
+                : formatDateToText(task.due_date)}{" "}
+            </Text>
           </Flex>
-
+          <Separator size="xs" />
+        </Card.Body>
+        <Card.Footer justifyContent="flex-end">
           <DialogRoot placement="center" motionPreset="slide-in-bottom">
             <DialogTrigger>
               <Button variant="surface">Edit</Button>

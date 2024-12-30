@@ -10,18 +10,18 @@ export const useTaskStore = create((set) => ({
       description,
       due_date,
       assigned_user_id,
-      priority_id,
-      status_id,
+      priority_id
     } = newTask;
+    console.log(newTask);
+
 
     // Validate required fields
     if (
       !title ||
       !description ||
-      !due_date ||
       !assigned_user_id ||
-      !priority_id ||
-      !status_id
+      !due_date ||
+      !priority_id
     ) {
       return { success: false, message: "Please fill in all required fields." };
     }
