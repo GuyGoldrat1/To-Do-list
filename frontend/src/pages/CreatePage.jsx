@@ -30,7 +30,7 @@ const CreatePage = () => {
     title: "",
     description: "",
     due_date: "",
-    assigned_user_id: "",
+    assigned_user_id: "1",
     priority_id: "1", // Default to "Low"
   });
   const { createTask } = useTaskStore();
@@ -107,16 +107,6 @@ const CreatePage = () => {
                 value={newTask.due_date}
                 onChange={(e) =>
                   setNewTask({ ...newTask, due_date: e.target.value })
-                }
-              />
-            </Field>
-            <Field label="Assigned User ID" required>
-              <Input
-                name="assigned_user_id"
-                type="number"
-                value={newTask.assigned_user_id}
-                onChange={(e) =>
-                  setNewTask({ ...newTask, assigned_user_id: e.target.value })
                 }
               />
             </Field>

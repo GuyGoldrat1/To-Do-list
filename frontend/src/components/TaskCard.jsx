@@ -34,6 +34,8 @@ import {
   SelectValueText,
 } from "./ui/select";
 import { Field } from "../components/ui/field";
+import { Checkbox } from "../components/ui/checkbox";
+
 import { useRef } from "react";
 import PrioritySelector from "./PrioritySelector";
 import moment from "moment";
@@ -41,6 +43,7 @@ import moment from "moment";
 const TaskCard = ({ task }) => {
   const { deleteTask, updateTask } = useTaskStore();
   const [updatedTask, setUpdatedTask] = useState(task);
+  const [isCompleted, setIsCompleted] = useState(task.status_id === 4); // Track the checkbox state
 
   const handleDeleteTask = async (taskId) => {
     const { success, message } = await deleteTask(taskId);
@@ -52,7 +55,11 @@ const TaskCard = ({ task }) => {
   };
 
   const handleUpdateTask = async (taskId) => {
-    const { success, message } = await updateTask(taskId, updatedTask);
+    const updatedTaskData = {
+      ...updatedTask,
+      status_id: isCompleted ? 4 : updatedTask.status_id, // Update status_id based on checkbox state
+    };
+    const { success, message } = await updateTask(taskId, updatedTaskData);
     toaster.create({
       description: message,
       type: success ? "success" : "error",
@@ -84,15 +91,18 @@ const TaskCard = ({ task }) => {
   const currentPriority = prioritys.items.find(
     (Priority) => Priority.value === String(task.priority_id)
   );
+
   const handlePriorityChange = (newPriorityId) => {
     setUpdatedTask({
       ...updatedTask,
       priority_id: newPriorityId, // Directly update the priority_id
     });
   };
+
   const formatDateToText = (dateString) => {
     return moment(dateString).format("DD MMM YY");
   };
+
   return (
     <Box>
       <Card.Root
@@ -181,35 +191,24 @@ const TaskCard = ({ task }) => {
                       }
                     />
                   </Field>
-                  <Field label="Assigned User ID" required>
-                    <Input
-                      type="number"
-                      placeholder="Assigned User ID"
-                      value={updatedTask.assigned_user_id}
-                      onChange={(e) =>
-                        setUpdatedTask({
-                          ...updatedTask,
-                          assigned_user_id: e.target.value,
-                        })
-                      }
-                    />
-                  </Field>
                   <Field label="Priority">
                     <PrioritySelector
                       items={prioritys.items}
                       onChange={handlePriorityChange}
                     />
                   </Field>
-                  <Input
-                    type="number"
-                    value={updatedTask.status_id}
-                    onChange={(e) =>
-                      setUpdatedTask({
-                        ...updatedTask,
-                        status_id: e.target.value,
-                      })
-                    }
-                  />
+                  {task.status_id != 5 && (
+                    <Checkbox
+                      variant={"solid"}
+                      colorPalette={"green"}
+                      size={"lg"}
+                      mt={5}
+                      defaultChecked={task.status_id === 4} // Set the checkbox state
+                      onChange={(e) => setIsCompleted(e.target.checked)} // Update checkbox state
+                    >
+                      Completed
+                    </Checkbox>
+                  )}
                 </VStack>
               </DialogBody>
               <DialogFooter>

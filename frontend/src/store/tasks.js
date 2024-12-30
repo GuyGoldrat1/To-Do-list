@@ -74,6 +74,8 @@ export const useTaskStore = create((set) => ({
   },
 
   updateTask: async (taskId, updatedTask) => {
+          console.log(updatedTask, "store");
+
     const res = await fetch(`/api/tasks/${taskId}`, {
       method: "PUT",
       headers: {
